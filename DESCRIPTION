@@ -1,0 +1,19 @@
+Package: ZZMisc
+Title: A bag of useful functions that have not found home package
+Version: 0.0.1
+Authors@R: 
+    person(given = "Zhenguo",
+           family = "Zhang",
+           role = c("aut", "cre"),
+           email = "zhangz.sci@gmail.com",
+           comment = c(ORCID = "0000-0002-9444-9604"))
+Description: This package hosts useful functions and other assets
+    which I have used in my research. Until these functions can be fit
+    into other specific packages, they will stay here.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    BiocManager
