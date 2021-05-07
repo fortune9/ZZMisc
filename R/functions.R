@@ -18,7 +18,10 @@ get_tmp_file<-function(tmpDir=".", prefix="",suffix="", sep="") {
 
 get_temp_file=get_tmp_file
 
-## wrap text strings
+#' Wrap text into paragraphs
+#'
+#' This program concatenates input strings and collapses consecutive
+#' blanks, and output a single string with inserted newlines.
 wrap_text<-function(..., lineLen=72, indent=0, exdent=0) {
     s<-paste(..., collapse=" ")
     s<-gsub("\\n+", " ", s)
