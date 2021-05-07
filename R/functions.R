@@ -1,5 +1,9 @@
 # string processing
-## random string
+#' Generate random string
+#'
+#' This function generates random string of given length, always
+#' starting with 2 letters
+
 rand_str<-function(length=10) {
   part1<-paste(sample(c(letters), 2), collapse = "")
   part2<-paste(sample(c(letters, 0:9), length-2, replace=T), collapse = "")
