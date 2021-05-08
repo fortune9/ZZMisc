@@ -34,7 +34,8 @@ wrap_text<-function(..., lineLen=72, indent=0, exdent=0) {
 
 # I/O
 ## Report information
-#
+
+#' Provide info message
 info<-function(...)
 {
         message(sprintf("[%s] %s", Sys.time(), paste(..., collapse=" ") ))
