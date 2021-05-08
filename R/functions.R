@@ -22,6 +22,8 @@ get_temp_file=get_tmp_file
 #'
 #' This program concatenates input strings and collapses consecutive
 #' blanks, and output a single string with inserted newlines.
+#'
+#' @importFrom base strwrap
 wrap_text<-function(..., lineLen=72, indent=0, exdent=0) {
     s<-paste(..., collapse=" ")
     s<-gsub("\\n+", " ", s)
