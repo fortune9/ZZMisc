@@ -3,6 +3,8 @@
 #'
 #' This function generates random string of given length, always
 #' starting with 2 letters
+#'
+#' @export
 
 rand_str<-function(length=10) {
   part1<-paste(sample(c(letters), 2), collapse = "")
@@ -23,7 +25,8 @@ get_temp_file=get_tmp_file
 #' This program concatenates input strings and collapses consecutive
 #' blanks, and output a single string with inserted newlines.
 #'
-#' @importFrom base strwrap
+#'
+#' @export
 wrap_text<-function(..., lineLen=72, indent=0, exdent=0) {
     s<-paste(..., collapse=" ")
     s<-gsub("\\n+", " ", s)
@@ -38,12 +41,16 @@ wrap_text<-function(..., lineLen=72, indent=0, exdent=0) {
 ## Report information
 
 #' Print info message
+#'
+#' @export
 info<-function(...)
 {
         message(sprintf("[%s] %s", Sys.time(), paste(..., collapse=" ") ))
 }
 
 #' Print warning message
+#'
+#' @export
 warn<-function(...)
 {
     info("[WARN]", ...)

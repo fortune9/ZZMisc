@@ -15,7 +15,7 @@ You can install this package with the following command from github
 
 ``` r
 library(devtools)
-install_github("ZZMisc", "fortune9")
+install_github("fortune9/ZZMisc")
 ```
 
 ## Example
