@@ -80,7 +80,7 @@ cran_install<-function(pkg) {
 		suppressMessages(
 			install.packages(
 				pkg,
-				dependencies=T,
+				dependencies=NA,
 				quiet=T,
 				repos="https://cloud.r-project.org"
 				)
