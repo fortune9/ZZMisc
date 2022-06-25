@@ -168,7 +168,7 @@ join_df<-function(dfList, setCol=TRUE, setNAtoZero=T,...) {
         if(i==1) {
             res<-toMerge
         } else {
-            res<-data.table::merge(res,toMerge,...)
+            res<-merge(res,toMerge,...)
         }
     }
     # set NAs in origin columns into zeros
