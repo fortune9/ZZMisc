@@ -124,4 +124,57 @@ install_package<-function(pkg)
 	}
 }
 
+#' Join dataframes
+#'
+#' Given a list of [data.frame] or [data.table],
+#' it outputs a [data.table] by merging them together
+#'
+#' @param dfList A list of data.frame or data.table
+#' @param setCol Whether to add a 'set' column for each input
+#'  data as an indicator of data origin. When TRUE, a new 
+#'  column (set1, set2, etc) is added to each input data;
+#'  when FALSE, nothing is added. Alternatively, one can
+#'  provide a character vector to be used as the names of
+#'  the indicator columns. The elements of the indicator columns
+#'  are all '1's.
+#' @param setNAtoZero If TRUE, the NAs in the indicator columns
+#'  are set to '0'.
+#' @param ... The parameters passed to [data.table::merge()]
+#'  directly
+#' @return A [data.table-class] object
+#'
+join_df<-function(dfList, setCol=TRUE, setNAtoZero=T,...) {
+    if(length(dfList) < 2) {
+        return(dfList[[1]])
+    }
+    if(identical(setCol, T)) {
+        origColNames<-paste0("Set", seq_len(length(dfList)))
+    } else if(!identical(setCol, F)) {
+        origColNames<-setCol
+        stopifnot(length(origColNames) == length(dfList))
+    } else {
+        origColNames<-NULL
+    }
+    # start merging
+    res<-data.table::data.table()
+    for(i in seq_len(length(dfList)) ) {
+        toMerge<-dfList[[i]]
+        if(!data.table::is.data.table(toMerge)) {
+            data.table::setDT(toMerge)
+        }
+        if(!is.null(origColNames)) {
+            toMerge[[origColNames[i]]]<-1L
+        }
+        if(i==1) {
+            res<-toMerge
+        } else {
+            res<-data.table::merge(res,toMerge,...)
+        }
+    }
+    # set NAs in origin columns into zeros
+    if(!is.null(origColNames) && setNAtoZero) {
+        res[, (origColNames):=lapply(.SD, function(x) { x[is.na(x)]<-0L; return(x) } ), .SDcols=origColNames]
+    }
+    return(invisible(res))
+}
 
