@@ -1,2 +1,2 @@
-#' @importFrom data.table :=
+#' @importFrom data.table := foverlaps
 NULL

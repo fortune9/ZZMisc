@@ -178,3 +178,81 @@ join_df<-function(dfList, setCol=TRUE, setNAtoZero=T,...) {
     return(invisible(res))
 }
 
+#' Region overlap
+#'
+#' Given two lists of genomic regions, a [data.table-class] containing
+#' the overlapped regions are returned.
+#'
+#' The input genomic regions should contain 3 columns, 'chr', 'start',
+#' and 'end', and all other columns are copied to the output.
+#'
+#' @param x The first input genomic regions. A [data.frame()] or
+#'   [data.table()].
+#' @param y The second input genomic regions. A [data.frame()] or
+#'   [data.table()].
+#' @param regionCols1 A vector of column names or numbers in `x` giving
+#'   'chr', 'start', and 'end' columns in order. Default is the first
+#'   3 columns.
+#' @param regionCols2 A vector of column names or numbers in `y` giving
+#'   'chr', 'start', and 'end' columns in order. Default is the first
+#'   3 columns.
+#' @param matchedOnly A logical. If TRUE, then non-overlaped input
+#'   regions won't be output. If FALSE (default), all the rows are
+#'   output
+#' @inheritParams data.table::foverlaps
+#' @return A data.table. The columns from `x` and `y` will have
+#'   suffix '.x' and '.y', respectively.
+#'
+region_overlap<-function(x, y, 
+                         regionCols1=1:3L,
+                         regionCols2=1:3L,
+                         type = c("any", "within", "start", "end", "equal"),
+                         mult = c("all", "first", "last"),
+                         matchedOnly=F
+                         ) {
+    type<-match.arg(type)
+    mult<-match.arg(mult)
+    if(!is.data.table(x)) { setDT(x) }
+    if(!is.data.table(y)) { setDT(y) }
+    if(is.integer(regionCols1)) { regionCols1<-colnames(x)[regionCols1] }
+    if(is.integer(regionCols2)) { regionCols2<-colnames(y)[regionCols2] }
+    setkeyv(y, regionCols2) # required
+    dat<-foverlaps(x[,..regionCols1],
+                   y[,..regionCols2],
+                   by.x=regionCols1,
+                   by.y=regionCols2,
+                   type=type,
+                   mult=mult,
+                   nomatch=NULL,
+                   which=T
+                   )
+    if(is.vector(dat)) { # a vector is returned for 'first' and 'last' mode
+        xid<-seq_len(length(dat))
+        xid<-xid[dat != 0]
+        yid<-dat[dat != 0]
+        dat<-data.table(xid,yid)
+    }
+    # create result data.table by combine overlapped and nonoverlapped
+    # rows
+    xColnames<-paste0(colnames(x), ".x")
+    yColnames<-paste0(colnames(y), ".y")
+    res<-cbind(x[dat$xid,], y[dat$yid,])
+    setnames(res, c(xColnames, yColnames))
+    # add non-matched rows
+    if(!matchedOnly) {
+        if(nrow(dat) > 0) { # sometimes no overlap at all
+         xSpecific<-x[-unique(dat$xid),]
+         ySpecific<-y[-unique(dat$yid),]
+        } else {
+         xSpecific<-x
+         ySpecific<-y
+        }
+         xSpecific[, (yColnames):=NA]
+         ySpecific[, (xColnames):=NA]
+         setnames(xSpecific, c(xColnames, yColnames))
+         setnames(ySpecific, c(yColnames, xColnames))
+         res<-rbind(res, xSpecific, ySpecific)
+    }
+    return(res)
+}
+

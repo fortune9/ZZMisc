@@ -25,13 +25,13 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(ZZMisc)
-# load a package, and install it if not installed yet
-load_package("ggplot2")
+#> Loading required package: ggplot2
 #> Warning: replacing previous import 'lifecycle::last_warnings' by
 #> 'rlang::last_warnings' when loading 'tibble'
 #> Warning: replacing previous import 'lifecycle::last_warnings' by
 #> 'rlang::last_warnings' when loading 'pillar'
-#> Loading required package: ggplot2
+# load a package, and install it if not installed yet
+load_package("ggplot2")
 ## basic example code
 ```
 
